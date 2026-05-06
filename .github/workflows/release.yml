@@ -1,6 +1,5 @@
 name: "Release"
 
-# 触发条件：当你推送一个以 v 开头的标签（如 v1.0.0）时，开始打包
 on:
   push:
     tags:
@@ -11,46 +10,40 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 如果你只想打包 Windows，就把下面两行删了，只留 windows-latest
         platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
 
-      # 1. 安装前端环境 (Node.js)
       - name: setup node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-	# --- 新加的部分 ---
+
       - name: setup bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      # ----------------
 
-      # 2. 安装 Rust (这一步就是替代你本地报错的那个步骤)
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      # 3. 如果是 Linux 需要安装额外的依赖库（Windows会自动跳过这一步）
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-20.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev
 
-      # 4. 安装前端依赖 (假设你用 npm，如果用 yarn 改成 yarn install)
       - name: install frontend dependencies
-        run: npm install
+        run: bun install
 
-      # 5. 核心：运行 Tauri 官方打包脚本
-      - uses: tauri-apps/tauri-action@v0
+      - name: tauri build
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__ # 会自动替换成你的 tag 名
+          tagName: v__VERSION__
           releaseName: "App v__VERSION__"
           releaseBody: "自动生成的版本。"
           releaseDraft: true
