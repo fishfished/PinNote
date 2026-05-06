@@ -23,6 +23,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+	# --- 新加的部分 ---
+      - name: setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      # ----------------
 
       # 2. 安装 Rust (这一步就是替代你本地报错的那个步骤)
       - name: install Rust stable
