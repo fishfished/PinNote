@@ -1,14 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // 1. 核心：开启静态导出模式，这会生成 Tauri 需要的 ../out 文件夹
+  output: "export", 
+  
   images: {
     unoptimized: true,
   },
-  // Whitelist LAN / device-on-Wi-Fi origins so HMR works when the template is
-  // opened from a phone or from the Eazo Mobile WebView. Next 15+ blocks
-  // cross-origin dev resources by default; we widen it to the local subnets
-  // most laptops hand out (192.168.*, 10.*, 172.16-31.*) plus localhost.
-  // Production builds are unaffected (this only governs `next dev`).
+  
+  // 保持你原来的开发配置不变
   allowedDevOrigins: [
     "localhost",
     "127.0.0.1",
