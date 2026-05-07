@@ -20,5 +20,6 @@ for i in $(seq 1 30); do
   sleep 1
 done
 
-# Keep server alive for Tauri build; Tauri will kill it when done
-wait $NEXT_PID
+# wait $NEXT_PID  <-- 删掉或注释掉这行
+
+echo "→ Server is running in background, moving to Tauri build..."
